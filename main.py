@@ -1,15 +1,19 @@
 import minor_loss as hmin
 import sys
 
-unit = {
-    'ft': 1,
-    'in': 1/12,
+unit = { # Unit system defined in FLT using lbf, inches, and seconds as base units.
+    'in': 1,
+    'ft': 12,
     'lbf': 1,
-    'psi': 1/((1/12)**2),
-    'psf': 1,
-    'lbm': 1,
-    'lbm/cf': 1
+    's': 1,
 }
+
+weight = 62.4*(unit['lbf']/(unit['ft']**3))
+g = 32.174*unit['ft']
+g_c = g
+
+unit['lbm'] = unit['lbf']*(g_c/g)
+unit['psi'] = unit['lbf']/(unit['in']**2)
 
 def Shutdown(msg: str):
     print(msg)
@@ -18,27 +22,21 @@ def Shutdown(msg: str):
 
 def enforceUnit(a: str):
     x = -1
-    num = 0
+    num: float
     b = ""
     if "psi" in a:
         b = a[0:a.find("psi")]
-        x = 1
+        num = float(b)/weight
     elif "ft" in a:
         b = a[0:a.find("ft")]
-        x = 0
-
-    if x == 1:
-        n = float(b)
-        num = n*2.31
-    elif x == 0:
-        num = float(b)
+        num = float(b)*unit['ft']
     else:
         Shutdown("Invalid unit detected.")
 
-    return num
+    return num #Returns in base number format.
 
-text = "12"
+text = "23 ft"
 
 theta = enforceUnit(text)
 
-print(theta)
+print(theta/unit['ft'])
