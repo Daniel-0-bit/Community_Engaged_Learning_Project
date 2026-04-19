@@ -10,9 +10,9 @@ unit = { # Unit system defined in FLT using lbf, inches, and seconds as base uni
 
 weight = 62.4*(unit['lbf']/(unit['ft']**3))
 g = 32.174*unit['ft']
-g_c = g
+g_c = 32.174 #lbm*ft/lbf/s^2
 
-unit['lbm'] = unit['lbf']*(g_c/g)
+unit['lbm'] = unit['lbf']*(g_c/g) #Under earth conditions, lbm should be 1:1 with lbf
 unit['psi'] = unit['lbf']/(unit['in']**2)
 
 def Shutdown(msg: str):
