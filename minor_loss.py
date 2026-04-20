@@ -1,6 +1,11 @@
-hf_minor = lambda a,b,Q: a*Q-b
+gate = {
+    1: 0.17,
+    0.75: 0.9,
+    0.5: 4.5,
+    0.25: 24
+}
 
 fittings = {
-    'elbow45': lambda q: hf_minor(1,0,q),
-    'elbow90': lambda q: hf_minor(1,0,q)
+    'elb90_standard': 0.75,
+    'gate': lambda o: gate[o]
 }

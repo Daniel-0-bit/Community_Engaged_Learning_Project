@@ -1,4 +1,3 @@
-import minor_loss as hmin
 import sys
 
 unit = { # Unit system defined in FLT using lbf, inches, and seconds as base units.
