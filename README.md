@@ -1,4 +1,4 @@
-# Energy Systems Design Communited Engage Learning Project (ESD-CEL project)
+# Energy Systems Design Community Engage Learning Project (ESD-CEL project)
 
 ## User made modules
 *minor_loss.py* holds the dictionary for the minor loss coefficients for fittings
