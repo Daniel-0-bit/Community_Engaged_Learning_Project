@@ -6,6 +6,6 @@ gate = {
 }
 
 fittings = {
-    'elb90_standard': 0.75,
+    'elb90': 0.75,
     'gate': lambda o: gate[o]
 }

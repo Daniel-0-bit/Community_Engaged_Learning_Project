@@ -1,17 +1,16 @@
 import sys
 
-g = 32.174*12 #in/s^2
 g_c = 32.174*12 #lbm*in/lbf/s^2
 
 unit = { # Unit system defined in FLT using lbf, inches, and seconds as base units.  Temperature in degrees Rankine
     'in': 1,
     'ft': 12,
     'lbf': 1,
+    'lbm': 1,
     's': 1,
     'degR': 1
 }
 
-unit['lbm'] = unit['lbf']*(g_c/g) # Under earth conditions, lbm should be 1:1 with lbf
 unit['psi'] = unit['lbf']/(unit['in']**2)
 unit['min'] = 60*unit['s']
 unit['hr'] = 60*unit['min']
@@ -29,9 +28,3 @@ def Shutdown(msg: str):
 def enforceUnit(a: str, u: str):
 
     return #Returns in base number format.
-
-text = "23 ft"
-
-theta = enforceUnit(text)
-
-print(theta/unit['ft'])
