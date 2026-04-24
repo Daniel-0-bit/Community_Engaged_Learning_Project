@@ -1,4 +1,5 @@
 import sys
+import numpy as np
 
 g_c = 32.174*12 #lbm*in/lbf/s^2
 
@@ -14,13 +15,13 @@ unit = { # Unit system defined in FLT using lbf, inches, and seconds as base uni
 unit['psi'] = unit['lbf']/(unit['in']**2)
 unit['min'] = 60*unit['s']
 unit['hr'] = 60*unit['min']
-unit['gal'] = 231 # Cubic inches in a gallon
+unit['gal'] = 231*unit['in']**3 # Cubic inches in a gallon
 unit['gpm'] = unit['gal']/unit['min'] # Gallons per minute
 unit['F>R'] = lambda T: T+459.67
 unit['R>F'] = lambda T: T-459.67
 unit['BTU'] = 778.17*unit['ft']*unit['lbf']
 
-def Shutdown(msg: str):
+def Shutdown(msg: str = 'Unknown error'):
     print(msg)
     print("Shutting down")
     sys.exit(1)
@@ -28,3 +29,30 @@ def Shutdown(msg: str):
 def enforceUnit(a: str, u: str):
 
     return #Returns in base number format.
+
+def heatCapacity(a: float,b: float):
+    C = []
+    Cr: float
+    if a<b:
+        C = [a,b]
+    else:
+        C = [b,a]
+
+    Cr = C[0]/C[1]
+
+    return C,Cr
+
+def eff_crossflow(cr: float, ntu: float, condition: str = "neither"):
+    method = {
+        "neither": lambda cr, ntu: 1-np.exp((1/cr)*np.pow(ntu,0.22)*(np.exp(-cr*np.pow(ntu,0.78))-1)),
+
+        "min": lambda cr, ntu: 1-np.exp(-(1/cr)*(1-np.exp(-cr*ntu))),
+
+        "max": lambda cr, ntu: (1/cr)*(1-np.exp(-cr*(1-np.exp(-ntu))))
+    }
+    
+    return method[condition](cr,ntu)
+
+def effectiveness(c: list, btu: float, hx: str):
+    eff: float
+    return eff
