@@ -19,7 +19,7 @@ D = 0.1722 #ft
 cross_area = np.pi*(D/2)**2 #square feet
 
 #Crossflow heat exchangers (mixed-unmixed)
-H_x = lambda Q: (0.0049*np.pow(Q,1.852)) # Q must be in gallons per minute.  Loss in ft*lbf/lbm
+#HX Head loss equation moved to utility module.
 A_hx = 5000 #ft^2
 U = lambda Q: (1/(1/(13*np.pow(Q,0.8))+0.047)) # Q in gpm.  Returns U in BTU/(hr*ft^2*degF)
 
@@ -77,7 +77,7 @@ for i,q in enumerate(w_mass):
     h_min.append(k_min*(u_w**2/(2*utl.g_c)))
 
     #HX loss
-    h_hx.append(H_x(w_flow_gpm))
+    h_hx.append(utl.HX_HeadLoss(w_flow_gpm))
 
     h_total.append(h_maj[i]+h_min[i]+h_hx[i])
 

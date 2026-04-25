@@ -63,3 +63,6 @@ def eff_crossflow(Cr: float, NTU: float, mixed: str = "neither"):
         eff = 1-np.exp(-NTU)
 
     return eff
+
+HX_HeadLoss = lambda Q: (0.0049*np.pow(Q,1.852)) # Q must be in gallons per minute.  Loss in ft*lbf/lbm
+
