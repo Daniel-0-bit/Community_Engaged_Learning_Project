@@ -148,6 +148,10 @@ for i,t in enumerate(T_w1):
 plt.plot(w_mass,T_w1F)
 plt.plot(w_mass,T_w2F)
 
+plt.title("Water Flow Temperatures")
+plt.xlabel("Mass flow rate (Lbm/s)")
+plt.ylabel(f"Temperature (\u00B0F)")
+
 plt.legend([
     "Water inlet of HX 1",
     "Water inlet of HX 2"
