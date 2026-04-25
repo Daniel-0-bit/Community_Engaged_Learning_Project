@@ -42,7 +42,9 @@ def heatCapacity(a: float,b: float):
 
     return C,Cr
 
-def eff_crossflow(cr: float, ntu: float, condition: str = "neither"):
+def eff_crossflow(Cr: float, NTU: float, mixed: str = "neither"):
+    eff: float
+    
     method = {
         "neither": lambda cr, ntu: 1-np.exp((1/cr)*np.pow(ntu,0.22)*(np.exp(-cr*np.pow(ntu,0.78))-1)),
 
@@ -50,9 +52,14 @@ def eff_crossflow(cr: float, ntu: float, condition: str = "neither"):
 
         "max": lambda cr, ntu: (1/cr)*(1-np.exp(-cr*(1-np.exp(-ntu))))
     }
-    
-    return method[condition](cr,ntu)
 
-def effectiveness(c: list, btu: float, hx: str):
-    eff: float
+    try:
+        if Cr <= 1e-10:
+            raise KeyError
+        else:
+            eff = method[mixed](Cr,NTU)
+    except KeyError:
+        print("Invalid.  Defaulting")
+        eff = 1-np.exp(-NTU)
+
     return eff
