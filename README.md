@@ -9,3 +9,4 @@
 
 ## Simulation programs
 *calc_a.py* is the python simulation for part A
+*calc_b.py* is the python simulation for part B
