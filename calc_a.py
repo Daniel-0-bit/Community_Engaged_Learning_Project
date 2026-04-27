@@ -146,6 +146,7 @@ plt.legend([
 
 plt.show()
 
+#Heat Transfer
 plt.plot(w_mass,q1)
 plt.plot(w_mass,q2)
 
@@ -160,6 +161,7 @@ plt.legend([
 
 plt.show()
 
+#Temperature
 T_w1F = []
 T_w2F = []
 for i,t in enumerate(T_w1):
