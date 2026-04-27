@@ -57,13 +57,36 @@ K = [
 # Hydraulic resistance coefficient for each pipe
 # Used in Hardy-Cross: h = K * Q^n
 
-flows_init = [0.8, 0.2, 1.2, 1.2, 1, 1, 1]
-# Initial guesses for flow in each pipe (ft^3/s)
+flows_init = [
+    384.9,
+    509.9+384.9,
+    385.2,
+    385.2,
+    384.9+385.2,
+    509.9,
+    509.9,
+]
+# Initial guesses for flow in each pipe (GPM)
 # Must satisfy continuity roughly but will be corrected
 
+for i,HX_flow in enumerate(flows_init):
+    flows_init[i] = HX_flow/448.831
+
+#Convert flow to ft^3/s
+
 loops = [
-    [[1,1],[2,-1],[3,-1],[4,-1]],
-    [[1,-1],[5,1],[6,1],[7,-1]]
+    [
+        [1,1],
+        [2,1],
+        [3,-1],
+        [4,-1]
+    ],
+    [
+        [5,-1],
+        [6,1],
+        [7,1],
+        [1,-1]
+    ]
 ]
 # Hardy-Cross loop definitions
 # Each entry = (pipe index, direction sign)
@@ -73,11 +96,11 @@ loops = [
 ## HEAT DEMANDS (BUILDINGS)
 ## =========================================================
 
-HX_demand = [50000, 40000, 30000]
+HX_demand = [1925875, 1924500, 2549700]
 # Heat required by each building (BTU/hr)
 # These are fixed energy sinks in the system
 
-HX_branches = [0, 3, 5]
+HX_branches = [3, 1, 6]
 # Mapping: which pipe supplies each building HX
 # Each demand corresponds to a branch flow
 
@@ -99,7 +122,7 @@ T_supply_out = unit
 Q_total_demand = sum(HX_demand)
 # Total thermal load of all buildings (BTU/hr)
 
-m_dot_total = Q_total_demand / (c_p * (T_supply_in - T_supply_out))
+Q_total = 0 #ft^3/s
 # Required total mass flow rate (lbm/s)
 # Derived from energy balance: Q = m*c_p*ΔT
 
