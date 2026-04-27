@@ -31,7 +31,7 @@ k_min += 6*hmin.fittings['gate'](f_t) #minor loss coefficient from gates
 # Air properties
 T_in = unit['F>R'](72) #Temperature converted to degrees Rankine
 T_out = unit['F>R'](10)
-Air_Mass = 25 #lbm/sec
+Air_Mass = 41.7 #lbm/sec
 c_air = 0.240 #BTU/lbm/degF
 capacity_air = Air_Mass*c_air #BTU/sec/degF
 capacity_air *= unit['hr'] #BTU/hr/degF
@@ -50,12 +50,14 @@ h_maj =[]
 h_min = []
 h_hx = []
 h_total = []
+q1 = [] #BTU/hr
+q2 = [] #BTU/hr
 
 w_mass = np.linspace(min_flow,max_flow,iteration)
 
 #Flow iteration
-for i,q in enumerate(w_mass):
-    w_flow = q/Density_w # ft^3/s
+for i,m in enumerate(w_mass):
+    w_flow = m/Density_w # ft^3/s
     w_flow_gpm = w_flow*(unit['ft']**3/unit['gpm']) #GPM
 
     u_w = w_flow/cross_area #velocity in ft/s
@@ -82,7 +84,7 @@ for i,q in enumerate(w_mass):
     h_total.append(h_maj[i]+h_min[i]+h_hx[i])
 
     ## HX Rating    
-    capacity_w = c_w*q*unit['hr']
+    capacity_w = c_w*m*unit['hr']
     capacity = sorted([capacity_w, capacity_air])
     Cr = capacity[0]/capacity[1]
     NTU: float
@@ -97,18 +99,21 @@ for i,q in enumerate(w_mass):
             eff = utl.eff_crossflow(Cr,NTU,'max')
         else:
             eff = utl.eff_crossflow(Cr,NTU,'min')
-
+    
     #q1 = eff*C_min*(T_1-T_out)
     #q1 = C_w*(T_1-T_2)
     #T_2 = T_1-eff*C_min*(T_1-T_out)/C_w
 
-    #q2 = eff*C_min*(T_in-T_2)
+    #q2 = eff*C_min*(T_2-T_in)
     #q2 = C_w*(T_2-T_1)
-    #T_1 = T_2-eff*C_min*(T_in-T_2)/C_w
+    #T_1 = T_2-eff*C_min*(T_2-T_air)/C_w
 
     if capacity_w < 1e-10:
         T_w1.append(T_in)
         T_w2.append(T_out)
+
+        q1.append(0)
+        q2.append(0)
     else:
         T_w1.append(T_w) #First HX inlet, initial guess
         T_w2.append(T_w-eff*capacity[0]*(T_w-T_out)/capacity_w) #Second HX inlet, initial guess
@@ -116,6 +121,10 @@ for i,q in enumerate(w_mass):
         for j in range(1,int(iteration/10)):
             T_w1[i] = T_w2[i]-eff*capacity[0]*(T_w2[i]-T_in)/capacity_w #Output temperature of second HX
             T_w2[i] = T_w1[i]-eff*capacity[0]*(T_w1[i]-T_out)/capacity_w #Output temperature of first HX
+        
+        q1.append(eff*capacity[0]*(T_w1[i]-T_out))
+        q2.append(eff*capacity[0]*(T_w2[i]-T_in))
+
 
 ##Plot rendering
 #Head loss
@@ -137,6 +146,19 @@ plt.legend([
 
 plt.show()
 
+plt.plot(w_mass,q1)
+plt.plot(w_mass,q2)
+
+plt.title("Rate of Heat Transfer")
+plt.xlabel("Mass flow rate (Lbm/s)")
+plt.ylabel("Heat transfer (BTU/hr)")
+
+plt.legend([
+    "HX 1",
+    "HX 2",
+])
+
+plt.show()
 
 T_w1F = []
 T_w2F = []
