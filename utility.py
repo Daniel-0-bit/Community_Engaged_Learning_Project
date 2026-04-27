@@ -9,7 +9,9 @@ unit = { # Unit system defined in FLT using lbf, inches, and seconds as base uni
     'lbf': 1,
     'lbm': 1,
     's': 1,
-    'degR': 1
+    'degR': 1,
+    'F>R': lambda T: T+459.67,
+    'R>F': lambda T: T-459.67,
 }
 
 unit['psi'] = unit['lbf']/(unit['in']**2)
@@ -17,8 +19,6 @@ unit['min'] = 60*unit['s']
 unit['hr'] = 60*unit['min']
 unit['gal'] = 231*unit['in']**3 # Cubic inches in a gallon
 unit['gpm'] = unit['gal']/unit['min'] # Gallons per minute
-unit['F>R'] = lambda T: T+459.67
-unit['R>F'] = lambda T: T-459.67
 unit['BTU'] = 778.17*unit['ft']*unit['lbf']
 
 def Shutdown(msg: str = 'Unknown error'):
@@ -66,5 +66,5 @@ def eff_crossflow(Cr: float, NTU: float, mixed: str = "neither"):
 
 HX_HeadLoss = lambda Q: (0.0049*np.pow(Q,1.852)) # Q must be in gallons per minute.  Loss in ft*lbf/lbm
 
-def differential(func: function, x: float, h: float = 1e-6):
+def differential(func, x: float, h: float = 1e-6):
     return float((func(x+h) - func(x-h))/(2*h))
