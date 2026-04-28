@@ -29,15 +29,9 @@ k_min = 10*hmin.fittings['elb90'](f_t) # Minor loss coefficient from elbows
 k_min += 6*hmin.fittings['gate'](f_t) #minor loss coefficient from gates
 
 # Air properties
-<<<<<<< Updated upstream
-T_in = unit['F>R'](72) #Temperature converted to degrees Rankine
-T_out = unit['F>R'](10)
-Air_Mass = 41.7 #lbm/sec
-=======
 T_in = 72 #Temperature in degF
 T_out = 10
-Air_Mass = 25 #lbm/sec
->>>>>>> Stashed changes
+Air_Mass = 41.7 #lbm/sec
 c_air = 0.240 #BTU/lbm/degF
 capacity_air = Air_Mass*c_air #BTU/sec/degF
 capacity_air *= unit['hr'] #BTU/hr/degF
@@ -62,13 +56,7 @@ q2 = [] #BTU/hr
 w_flow = np.linspace(min_flow,max_flow,iteration) #GPM
 
 #Flow iteration
-<<<<<<< Updated upstream
-for i,m in enumerate(w_mass):
-    w_flow = m/Density_w # ft^3/s
-    w_flow_gpm = w_flow*(unit['ft']**3/unit['gpm']) #GPM
-=======
 for i,q in enumerate(w_flow):
->>>>>>> Stashed changes
 
     u_w = q*(unit['gpm']/(unit['ft']**3))/cross_area #velocity in ft/s
     m = q*(unit['gpm']/unit['ft']**3)*Density_w
@@ -90,11 +78,7 @@ for i,q in enumerate(w_flow):
     h_min.append(k_min*(u_w**2/(2*utl.g_c)))
 
     #HX loss
-<<<<<<< Updated upstream
-    h_hx.append(H_x(w_flow_gpm))
-=======
     h_hx.append(utl.HX_HeadLoss(q))
->>>>>>> Stashed changes
 
     h_total.append(h_maj[i]+h_min[i]+h_hx[i])
 
@@ -136,15 +120,8 @@ for i,q in enumerate(w_flow):
         for j in range(1,int(iteration/10)):
             T_w1[i] = T_w2[i]-eff*capacity[0]*(T_w2[i]-T_in)/capacity_w #Output temperature of second HX
             T_w2[i] = T_w1[i]-eff*capacity[0]*(T_w1[i]-T_out)/capacity_w #Output temperature of first HX
-<<<<<<< Updated upstream
-        
-        q1.append(eff*capacity[0]*(T_w1[i]-T_out))
-        q2.append(eff*capacity[0]*(T_w2[i]-T_in))
-
-=======
     
     Freeze.append(32)
->>>>>>> Stashed changes
 
 ##Plot rendering
 #Head loss
@@ -166,36 +143,10 @@ plt.legend([
 
 plt.show()
 
-<<<<<<< Updated upstream
-plt.plot(w_mass,q1)
-plt.plot(w_mass,q2)
-
-plt.title("Rate of Heat Transfer")
-plt.xlabel("Mass flow rate (Lbm/s)")
-plt.ylabel("Heat transfer (BTU/hr)")
-
-plt.legend([
-    "HX 1",
-    "HX 2",
-])
-
-plt.show()
-
-T_w1F = []
-T_w2F = []
-for i,t in enumerate(T_w1):
-    T_w1F.append(unit['R>F'](T_w1[i]))
-    T_w2F.append(unit['R>F'](T_w2[i]))
-
-
-plt.plot(w_mass,T_w1F)
-plt.plot(w_mass,T_w2F)
-=======
 #HX inlet temperatures
 plt.plot(w_flow,T_w1,color='r')
 plt.plot(w_flow,T_w2,color='b')
 plt.plot(w_flow,Freeze,color='k',linestyle='--')
->>>>>>> Stashed changes
 
 plt.title("Water Flow Temperatures")
 plt.xlabel("Flow rate (gpm)")
