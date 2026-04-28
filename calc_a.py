@@ -7,7 +7,7 @@ import utility as utl
 from utility import unit
 
 min_flow = 0
-max_flow = 300
+max_flow = 500
 iteration = 1000
 
 g = 32.174 #ft/s^2
