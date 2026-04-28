@@ -7,7 +7,7 @@ import utility as utl
 from utility import unit
 
 min_flow = 0
-max_flow = 50
+max_flow = 300
 iteration = 1000
 
 g = 32.174 #ft/s^2
@@ -29,9 +29,15 @@ k_min = 10*hmin.fittings['elb90'](f_t) # Minor loss coefficient from elbows
 k_min += 6*hmin.fittings['gate'](f_t) #minor loss coefficient from gates
 
 # Air properties
+<<<<<<< Updated upstream
 T_in = unit['F>R'](72) #Temperature converted to degrees Rankine
 T_out = unit['F>R'](10)
 Air_Mass = 41.7 #lbm/sec
+=======
+T_in = 72 #Temperature in degF
+T_out = 10
+Air_Mass = 25 #lbm/sec
+>>>>>>> Stashed changes
 c_air = 0.240 #BTU/lbm/degF
 capacity_air = Air_Mass*c_air #BTU/sec/degF
 capacity_air *= unit['hr'] #BTU/hr/degF
@@ -41,11 +47,11 @@ Density_w = 62.4 #lbm/ft^3
 Mu = 0.88e-3 #dynamic viscosity lbm/ft/s
 Nu = 1.4e-5 #kinematic viscosity ft^2/s
 c_w = 1.00 #BTU/lbm/degF
-T_w = unit['F>R'](50) #Guess temperature for water
+T_w = 50 #Guess temperature for water
 T_w1 = [] #Iterated flow values
 T_w2 = []
+Freeze = []
 
-w_mass = [] #lbm/s
 h_maj =[]
 h_min = []
 h_hx = []
@@ -53,20 +59,25 @@ h_total = []
 q1 = [] #BTU/hr
 q2 = [] #BTU/hr
 
-w_mass = np.linspace(min_flow,max_flow,iteration)
+w_flow = np.linspace(min_flow,max_flow,iteration) #GPM
 
 #Flow iteration
+<<<<<<< Updated upstream
 for i,m in enumerate(w_mass):
     w_flow = m/Density_w # ft^3/s
     w_flow_gpm = w_flow*(unit['ft']**3/unit['gpm']) #GPM
+=======
+for i,q in enumerate(w_flow):
+>>>>>>> Stashed changes
 
-    u_w = w_flow/cross_area #velocity in ft/s
+    u_w = q*(unit['gpm']/(unit['ft']**3))/cross_area #velocity in ft/s
+    m = q*(unit['gpm']/unit['ft']**3)*Density_w
 
     Re = u_w*D/Nu
 
     ## Head losses
     #Major loss
-    if Re <= 1e-8:
+    if Re < 1:
         f = 0
     elif Re < 2300:
         f = 64/Re
@@ -79,7 +90,11 @@ for i,m in enumerate(w_mass):
     h_min.append(k_min*(u_w**2/(2*utl.g_c)))
 
     #HX loss
+<<<<<<< Updated upstream
     h_hx.append(H_x(w_flow_gpm))
+=======
+    h_hx.append(utl.HX_HeadLoss(q))
+>>>>>>> Stashed changes
 
     h_total.append(h_maj[i]+h_min[i]+h_hx[i])
 
@@ -93,7 +108,7 @@ for i,m in enumerate(w_mass):
     if capacity[0] < 1e-10:
         eff = 1
     else:
-        NTU = U(w_flow_gpm)*A_hx/capacity[0] #unitless.  capacity[0] is C_min
+        NTU = U(q)*A_hx/capacity[0] #unitless.  capacity[0] is C_min
 
         if capacity_air > capacity_w:
             eff = utl.eff_crossflow(Cr,NTU,'max')
@@ -121,20 +136,25 @@ for i,m in enumerate(w_mass):
         for j in range(1,int(iteration/10)):
             T_w1[i] = T_w2[i]-eff*capacity[0]*(T_w2[i]-T_in)/capacity_w #Output temperature of second HX
             T_w2[i] = T_w1[i]-eff*capacity[0]*(T_w1[i]-T_out)/capacity_w #Output temperature of first HX
+<<<<<<< Updated upstream
         
         q1.append(eff*capacity[0]*(T_w1[i]-T_out))
         q2.append(eff*capacity[0]*(T_w2[i]-T_in))
 
+=======
+    
+    Freeze.append(32)
+>>>>>>> Stashed changes
 
 ##Plot rendering
 #Head loss
-plt.plot(w_mass,h_maj)
-plt.plot(w_mass,h_min)
-plt.plot(w_mass,h_hx)
-plt.plot(w_mass,h_total, lw=2)
+plt.plot(w_flow,h_maj)
+plt.plot(w_flow,h_min)
+plt.plot(w_flow,h_hx)
+plt.plot(w_flow,h_total, lw=2)
 
 plt.title("Head losses")
-plt.xlabel("Mass flow rate (lbm/s)")
+plt.xlabel("Flow rate (gpm)")
 plt.ylabel("Head loss (ft*lbf/lbm)")
 
 plt.legend([
@@ -146,6 +166,7 @@ plt.legend([
 
 plt.show()
 
+<<<<<<< Updated upstream
 plt.plot(w_mass,q1)
 plt.plot(w_mass,q2)
 
@@ -169,9 +190,15 @@ for i,t in enumerate(T_w1):
 
 plt.plot(w_mass,T_w1F)
 plt.plot(w_mass,T_w2F)
+=======
+#HX inlet temperatures
+plt.plot(w_flow,T_w1,color='r')
+plt.plot(w_flow,T_w2,color='b')
+plt.plot(w_flow,Freeze,color='k',linestyle='--')
+>>>>>>> Stashed changes
 
 plt.title("Water Flow Temperatures")
-plt.xlabel("Mass flow rate (Lbm/s)")
+plt.xlabel("Flow rate (gpm)")
 plt.ylabel(f"Temperature (\u00B0F)")
 
 plt.legend([
