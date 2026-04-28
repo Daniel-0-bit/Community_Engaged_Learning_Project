@@ -28,7 +28,7 @@ C = 130
 # Hazen-Williams roughness coefficient
 # Higher = smoother pipes → lower head loss
 
-max_iter = 100  
+max_iter = 100
 # Maximum iterations allowed for Hardy-Cross solver
 
 precision = 5e-5  
@@ -112,21 +112,20 @@ c_p = 1.0
 ## SUPPLY CONDITIONS (GIVEN SYSTEM BOUNDARY)
 ## =========================================================
 
-T_supply_in = unit
+T_supply_in = unit['F>R'](47.8)
 # Temperature entering supply HX (Rankine)
 
-T_supply_out = unit
+T_supply_out = unit['F>R'](40)
 # Temperature leaving supply HX (Rankine)
 # Defines total energy added to system
 
 Q_total_demand = sum(HX_demand)
 # Total thermal load of all buildings (BTU/hr)
 
-Q_total = 0 #ft^3/s
+Q_total = flows_init[0]+flows_init[2]+flows_init[5] #ft^3/s
 # Required total mass flow rate (lbm/s)
 # Derived from energy balance: Q = m*c_p*ΔT
 
-Q_vol_total = m_dot_total / Density_w
 # Total volumetric flow rate (ft^3/s)
 # This is what Hardy-Cross distributes across pipes
 
@@ -254,7 +253,7 @@ def main():
         print(f"Pipe {i+1}: {Q:.5f} ft^3/s")
 
     print("\nTotal system flow (from energy balance):")
-    print(f"{Q_vol_total:.5f} ft^3/s")
+    print(f"{Q_total:.5f} ft^3/s")
 
     print("\nRunning thermal model...")
 

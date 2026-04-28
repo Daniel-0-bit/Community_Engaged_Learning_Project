@@ -27,40 +27,6 @@ m_total = (demand_total/(60**2))/(c_w*(Chiller_inlet-Chiller_outlet)) #mass flow
 v_total = m_total/Density_w #volumetric flow through chiller in ft^3/s
 v_total_gpm = v_total*((unit['ft']**3)/unit['gpm'])
 
-Pipes = [ #Pipes defined by (length (ft), diameter (in))
-    [300, 8],
-    [100,10],
-    [300,8],
-    [100,8],
-    [300,10],
-    [300,8],
-    [300,8]
-]
-
-k1 = 4.727
-n = 1.852
-c = 130
-ft = 0.014
-
-K = []
-for L,D in Pipes:
-    K.append((k1*L)/((np.pow(c,n))*np.pow(D,4.8704)))
-
-Network = [ #Loops arranged by building.  (Pipe, direction)
-    [ #Loop 1
-        [0,1],
-        [1,1],
-        [2,-1],
-        [3,-1]
-    ],
-    [ #Loop 2
-        [0,-1],
-        [4,-1],
-        [5,1],
-        [6,1]
-    ]
-]
-
 def thermal_simulation():
     print(f"Chiller inlet temperature: {Chiller_inlet} degF\nChiller outlet temperature: {Chiller_outlet} degF")
 
