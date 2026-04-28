@@ -4,6 +4,7 @@ import utility as utl
 import minor_loss as hmin
 
 from utility import unit
+from calc_b_1 import v_total
 
 Pipes = [ #Pipes defined by (length (ft), diameter (in))
     [300, 8],
